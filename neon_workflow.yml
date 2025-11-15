@@ -1,1 +1,22 @@
-.github/workflows/neon_workflow.yml
+name: Create/Delete Branch for Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  manage-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: neondatabase/create-branch-action@v1
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          api_key: ${{ secrets.NEON_API_KEY }}
